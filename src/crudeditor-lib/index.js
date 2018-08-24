@@ -93,6 +93,7 @@ const appName = 'crudEditor';
 
 export default baseModelDefinition => {
   const modelDefinition = fillDefaults(baseModelDefinition);
+  console.log({ modelDefinition });
   const prefix = `${appName}.${hash(modelDefinition)}`;
 
   let onTransition = null;

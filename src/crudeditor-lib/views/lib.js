@@ -1,6 +1,7 @@
 import React from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 
+// TODO MOVE_UI_TO_CONFIG
 import GenericInput from '../../components/GenericInput';
 import RangeInput from '../../components/RangeInput';
 import deferValueSync from '../../components/DeferValueSyncHOC';

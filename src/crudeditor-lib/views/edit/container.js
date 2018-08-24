@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
-import Main from '../../../components/EditMain';
 import { VIEW_NAME } from './constants';
 import { VIEW_SEARCH, PERMISSION_VIEW, PERMISSION_CREATE, PERMISSION_DELETE } from '../../common/constants';
 import { expandExternalOperation, expandCustomOperation } from '../lib';
@@ -147,7 +145,7 @@ const mergeProps = /* istanbul ignore next */ (
   }
 });
 
-export default connect(
+export default Component => connect(
   /* istanbul ignore next */
   (storeState, { modelDefinition, externalOperations, uiConfig }) => ({
     viewModelData: getViewModelData(storeState, modelDefinition),
@@ -176,5 +174,5 @@ export default connect(
   mergeProps
 )(
   /* istanbul ignore next */
-  ({ viewModel }) => <Main model={viewModel} />
+  ({ viewModel }) => <Component model={viewModel} />
 );

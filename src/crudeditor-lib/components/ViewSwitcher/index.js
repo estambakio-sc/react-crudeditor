@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import SearchView from '../../views/search/container';
-import CreateView from '../../views/create/container';
-import EditView from '../../views/edit/container';
-import ShowView from '../../views/show/container';
-import ErrorView from '../../views/error/container';
+import searchView from '../../views/search/container';
+import createView from '../../views/create/container';
+import editView from '../../views/edit/container';
+import showView from '../../views/show/container';
+import errorView from '../../views/error/container';
 
 import {
   VIEW_SEARCH,
@@ -23,27 +23,31 @@ const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, uiC
     return null;
   }
 
-  const ViewContainer = ({
-    [VIEW_SEARCH]: SearchView,
-    [VIEW_CREATE]: CreateView,
-    [VIEW_EDIT]: EditView,
-    [VIEW_SHOW]: ShowView,
-    [VIEW_ERROR]: ErrorView
-  })[activeViewName];
+  const containers = {
+    [VIEW_SEARCH]: searchView,
+    [VIEW_CREATE]: createView,
+    [VIEW_EDIT]: editView,
+    [VIEW_SHOW]: showView,
+    [VIEW_ERROR]: errorView
+  }
+
+  if (Object.keys(containers).indexOf(activeViewName) === -1) {
+    return (
+      <div>Unknown view <i>{activeViewName}</i></div>
+    )
+  }
+
+  const ViewComponent = modelDefinition.ui[activeViewName].component;
+
+  const ViewContainer = containers[activeViewName](ViewComponent);
 
   return (
-    <div>
-      {
-        ViewContainer ?
-          <ViewContainer
-            modelDefinition={modelDefinition}
-            externalOperations={externalOperations}
-            uiConfig={uiConfig}
-            i18n={i18n}
-          /> :
-          <div>Unknown view <i>{activeViewName}</i></div>
-      }
-    </div>
+    <ViewContainer
+      modelDefinition={modelDefinition}
+      externalOperations={externalOperations}
+      uiConfig={uiConfig}
+      i18n={i18n}
+    />
   );
 }
 

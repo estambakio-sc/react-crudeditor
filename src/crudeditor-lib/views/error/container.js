@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Main from '../../../components/ErrorMain';
 import { getViewModelData } from './selectors';
 import { softRedirectView } from '../../common/actions';
 import { VIEW_SEARCH, PERMISSION_VIEW } from '../../common/constants';
@@ -29,7 +28,7 @@ const mergeProps = /* istanbul ignore next */ (
   }
 });
 
-export default connect(
+export default Component => connect(
   /* istanbul ignore next */
   (storeState, { modelDefinition, uiConfig }) => ({
     viewModelData: getViewModelData(storeState, modelDefinition),
@@ -44,5 +43,5 @@ export default connect(
   mergeProps
 )(
   /* istanbul ignore next */
-  ({ viewModel }) => <Main model={viewModel} />
+  ({ viewModel }) => <Component model={viewModel} />
 );
