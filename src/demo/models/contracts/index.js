@@ -6,6 +6,13 @@ import CustomSpinner from './components/CustomSpinner';
 import ContractReferenceSearch from './components/ContractReferenceSearch';
 import CustomTabComponent from './components/CustomTabComponent';
 
+// connected components (entry points) per view
+import SearchMain from '../../../components/SearchMain';
+import EditMain from '../../../components/EditMain';
+import CreateMain from '../../../components/CreateMain';
+import ShowMain from '../../../components/ShowMain';
+import ErrorMain from '../../../components/ErrorMain';
+
 import {
   FIELD_TYPE_BOOLEAN,
   FIELD_TYPE_DECIMAL,
@@ -417,7 +424,8 @@ export default {
         { name: 'extContractId', sortable: true },
         { name: 'extContractLineId', sortable: true },
         { name: 'validRange', component: DateRangeCellRender }
-      ]
+      ],
+      component: SearchMain
     }),
     instanceLabel: /* istanbul ignore next */ instance => instance._objectLabel || instance.contractId || '',
     create: {
@@ -434,13 +442,19 @@ export default {
         },
         {}
       ),
-      formLayout: buildFormLayout(VIEW_CREATE)
+      formLayout: buildFormLayout(VIEW_CREATE),
+      component: CreateMain
     },
     edit: {
-      formLayout: buildFormLayout(VIEW_EDIT)
+      formLayout: buildFormLayout(VIEW_EDIT),
+      component: EditMain
     },
     show: {
-      formLayout: buildFormLayout(VIEW_SHOW)
+      formLayout: buildFormLayout(VIEW_SHOW),
+      component: ShowMain
+    },
+    error: {
+      component: ErrorMain
     },
     spinner: CustomSpinner,
     customOperations: /* istanbul ignore next */ instance => [{
