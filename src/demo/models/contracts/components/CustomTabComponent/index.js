@@ -32,8 +32,10 @@ export default class CustomTabComponent extends PureComponent {
           }
         }}
 
-        uiConfig={{
-          headerLevel: 3
+        extraProps={{
+          uiConfig: {
+            headerLevel: 3
+          }
         }}
 
         onTransition={this.handleTransition}

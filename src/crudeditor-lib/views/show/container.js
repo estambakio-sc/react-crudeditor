@@ -28,7 +28,7 @@ const mergeProps = /* istanbul ignore next */ (
     permissions: { crudOperations },
     customOperations,
     externalOperations,
-    uiConfig
+    extraProps
   },
   {
     showPreviousInstance,
@@ -40,8 +40,6 @@ const mergeProps = /* istanbul ignore next */ (
   { i18n }
 ) => ({
   viewModel: {
-    uiConfig,
-
     data: {
       persistentInstance: instance,
       ...restData
@@ -78,12 +76,13 @@ const mergeProps = /* istanbul ignore next */ (
         filter(operation => operation)
     ] :
       [] // viewState is undefined when view is not initialized yet (ex. during Hard Redirect).
-  }
+  },
+  extraProps
 });
 
 export default Component => connect(
   /* istanbul ignore next */
-  (storeState, { modelDefinition, externalOperations, uiConfig }) => ({
+  (storeState, { modelDefinition, externalOperations, extraProps }) => ({
     viewModelData: getViewModelData(storeState, modelDefinition),
     adjacentInstancesExist: getAdjacentInstancesInfo(
       storeState,
@@ -93,7 +92,7 @@ export default Component => connect(
     permissions: modelDefinition.permissions,
     customOperations: modelDefinition.ui.customOperations,
     externalOperations,
-    uiConfig
+    extraProps
   }), {
     selectTab,
     exitView: /* istanbul ignore next */ _ => softRedirectView({ name: VIEW_SEARCH }),
@@ -104,5 +103,5 @@ export default Component => connect(
   mergeProps
 )(
   /* istanbul ignore next */
-  ({ viewModel }) => <Component model={viewModel} />
+  ({ viewModel, extraProps }) => <Component model={viewModel} extraProps={extraProps}/>
 );

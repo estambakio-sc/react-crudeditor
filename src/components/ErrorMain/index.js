@@ -9,9 +9,11 @@ const ErrorMain = ({
     },
     actions: {
       goHome
-    },
+    }
+  },
+  extraProps: {
     uiConfig: {
-      headerLevel = 1
+      headerLevel
     }
   }
 }) => {
@@ -47,9 +49,21 @@ ErrorMain.propTypes = {
     }),
     data: PropTypes.shape({
       errors: PropTypes.arrayOf(PropTypes.object).isRequired
-    }),
-    uiConfig: PropTypes.object.isRequired
-  }).isRequired
+    })
+  }).isRequired,
+  extraProps: PropTypes.shape({
+    uiConfig: PropTypes.shape({
+      headerLevel: PropTypes.number
+    })
+  })
+}
+
+ErrorMain.defaultProps = {
+  extraProps: {
+    uiConfig: {
+      headerLevel: 1
+    }
+  }
 }
 
 export default ErrorMain;

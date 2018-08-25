@@ -15,19 +15,36 @@ export default class SearchMain extends PureComponent {
       actions: PropTypes.objectOf(PropTypes.func),
       data: PropTypes.shape({
         hideSearchForm: PropTypes.bool
-      }),
+      })
+    }).isRequired,
+    extraProps: PropTypes.shape({
       uiConfig: PropTypes.shape({
         headerLevel: PropTypes.number
       })
-    }).isRequired
+    })
   }
 
   static contextTypes = {
     i18n: PropTypes.object
   }
 
+  static defaultProps = {
+    extraProps: {
+      uiConfig: {
+        headerLevel: 1
+      }
+    }
+  }
+
   render() {
-    const { model } = this.props;
+    const {
+      model,
+      extraProps: {
+        uiConfig: {
+          headerLevel
+        }
+      }
+    } = this.props;
 
     const {
       data: {
@@ -36,9 +53,6 @@ export default class SearchMain extends PureComponent {
       actions: {
         toggleSearchForm,
         createInstance
-      },
-      uiConfig: {
-        headerLevel = 1
       }
     } = model;
 

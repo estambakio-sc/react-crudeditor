@@ -22,9 +22,11 @@ export default class EditHeading extends PureComponent {
         persistentInstance: PropTypes.object,
         unsavedChanges: PropTypes.bool
       }),
-      actions: PropTypes.objectOf(PropTypes.func),
+      actions: PropTypes.objectOf(PropTypes.func)
+    }).isRequired,
+    extraProps: PropTypes.shape({
       uiConfig: PropTypes.object.isRequired
-    }).isRequired
+    })
   }
 
   static contextTypes = {
@@ -49,9 +51,11 @@ export default class EditHeading extends PureComponent {
           exitView,
           gotoPreviousInstance,
           gotoNextInstance
-        },
+        }
+      },
+      extraProps: {
         uiConfig: {
-          headerLevel = 1
+          headerLevel
         }
       }
     } = this.props;

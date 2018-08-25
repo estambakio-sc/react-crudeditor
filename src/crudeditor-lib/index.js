@@ -107,9 +107,7 @@ export default baseModelDefinition => {
       }),
       onTransition: PropTypes.func,
       externalOperations: PropTypes.func,
-      uiConfig: PropTypes.shape({
-        headerLevel: PropTypes.number
-      })
+      extraProps: PropTypes.object // views will get it
     }
 
     static contextTypes = {
@@ -121,8 +119,7 @@ export default baseModelDefinition => {
     }
 
     static defaultProps = {
-      externalOperations: _ => [],
-      uiConfig: {}
+      externalOperations: _ => []
     };
 
     constructor(...args) {
@@ -218,7 +215,7 @@ export default baseModelDefinition => {
           viewState={this.props.view ? this.props.view.state : undefined}
           modelDefinition={modelDefinition}
           externalOperations={this.props.externalOperations}
-          uiConfig={this.props.uiConfig}
+          extraProps={this.props.extraProps}
         />
       </Provider>)
   }

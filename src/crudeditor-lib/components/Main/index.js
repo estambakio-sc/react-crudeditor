@@ -11,7 +11,7 @@ class CrudMain extends PureComponent {
     modelDefinition: PropTypes.object.isRequired,
     hardRedirectView: PropTypes.func.isRequired,
     externalOperations: PropTypes.func.isRequired,
-    uiConfig: PropTypes.object.isRequired
+    extraProps: PropTypes.object
   }
 
   constructor(...args) {
@@ -35,7 +35,7 @@ class CrudMain extends PureComponent {
     <ViewSwitcher
       modelDefinition={this.props.modelDefinition}
       externalOperations={this.props.externalOperations}
-      uiConfig={this.props.uiConfig}
+      extraProps={this.props.extraProps}
     />
   )
 }

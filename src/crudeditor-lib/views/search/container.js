@@ -44,7 +44,7 @@ const mergeProps = /* istanbul ignore next */ (
     permissions: { crudOperations },
     customOperations,
     externalOperations,
-    uiConfig
+    extraProps
   },
   {
     softRedirectView,
@@ -54,8 +54,6 @@ const mergeProps = /* istanbul ignore next */ (
   { i18n }
 ) => ({
   viewModel: {
-    uiConfig,
-
     data: {
       selectedInstances,
       ...restData
@@ -97,6 +95,7 @@ const mergeProps = /* istanbul ignore next */ (
 
       return [
         {
+          // TODO MOVE_UI_AWAY_FROM_CORE
           title: i18n.getMessage(`crudEditor.${ canEdit ? 'edit' : 'show' }.button`),
           icon: canEdit ? 'edit' : 'eye-open',
           handler: _ => softRedirectView({
@@ -146,19 +145,20 @@ const mergeProps = /* istanbul ignore next */ (
       })
     } :
       {} // viewState is undefined when view is not initialized yet (ex. during Hard Redirect).
-  }
+  },
+  extraProps
 });
 
 export default Component => connect(
   /* istanbul ignore next */
-  (storeState, { modelDefinition, externalOperations, uiConfig }) => ({
+  (storeState, { modelDefinition, externalOperations, extraProps }) => ({
     viewModelData: getViewModelData(storeState, modelDefinition),
     defaultNewInstance: getDefaultNewInstance(storeState, modelDefinition),
     viewState: getViewState(storeState, modelDefinition),
     permissions: modelDefinition.permissions,
     customOperations: modelDefinition.ui.customOperations,
     externalOperations,
-    uiConfig
+    extraProps
   }),
   {
     deleteInstances,
@@ -174,5 +174,5 @@ export default Component => connect(
   mergeProps
 )(
   /* istanbul ignore next */
-  ({ viewModel }) => <Component model={viewModel} />
+  ({ viewModel, extraProps }) => <Component model={viewModel} extraProps={extraProps}/>
 );

@@ -18,7 +18,7 @@ import {
 
 import WithAlerts from '../WithAlertsHOC';
 
-const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, uiConfig }, { i18n }) => {
+const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, extraProps }, { i18n }) => {
   if (!activeViewName) {
     return null;
   }
@@ -45,7 +45,7 @@ const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, uiC
     <ViewContainer
       modelDefinition={modelDefinition}
       externalOperations={externalOperations}
-      uiConfig={uiConfig}
+      extraProps={extraProps}
       i18n={i18n}
     />
   );
@@ -55,12 +55,12 @@ ViewSwitcher.propTypes = {
   activeViewName: PropTypes.string,
   modelDefinition: PropTypes.object.isRequired,
   externalOperations: PropTypes.func.isRequired,
-  uiConfig: PropTypes.object.isRequired
-};
+  extraProps: PropTypes.object
+}
 
 ViewSwitcher.contextTypes = {
-  i18n: PropTypes.object
-};
+  i18n: PropTypes.object.isRequired
+}
 
 export default connect(
   storeState => ({ activeViewName: storeState.common.activeViewName })

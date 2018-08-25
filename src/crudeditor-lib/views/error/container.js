@@ -11,7 +11,7 @@ const mergeProps = /* istanbul ignore next */ (
     permissions: {
       crudOperations
     },
-    uiConfig
+    extraProps
   },
   {
     goHome,
@@ -19,21 +19,21 @@ const mergeProps = /* istanbul ignore next */ (
   }
 ) => ({
   viewModel: {
-    uiConfig,
     data: viewModelData,
     actions: {
       ...(isAllowed(crudOperations, PERMISSION_VIEW) && { goHome }),
       ...dispatchProps
     }
-  }
+  },
+  extraProps
 });
 
 export default Component => connect(
   /* istanbul ignore next */
-  (storeState, { modelDefinition, uiConfig }) => ({
+  (storeState, { modelDefinition, extraProps }) => ({
     viewModelData: getViewModelData(storeState, modelDefinition),
     permissions: modelDefinition.permissions,
-    uiConfig
+    extraProps
   }),
   {
     goHome: /* istanbul ignore next */ _ => softRedirectView({
@@ -43,5 +43,5 @@ export default Component => connect(
   mergeProps
 )(
   /* istanbul ignore next */
-  ({ viewModel }) => <Component model={viewModel} />
+  ({ viewModel, extraProps }) => <Component model={viewModel} extraProps={extraProps}/>
 );

@@ -27,7 +27,7 @@ const mergeProps = /* istanbul ignore next */ (
     permissions: { crudOperations },
     customOperations,
     externalOperations,
-    uiConfig
+    extraProps
   },
   {
     softRedirectView,
@@ -39,8 +39,6 @@ const mergeProps = /* istanbul ignore next */ (
   { i18n }
 ) => ({
   viewModel: {
-    uiConfig,
-
     data: {
       unsavedChanges,
       ...restData
@@ -107,18 +105,19 @@ const mergeProps = /* istanbul ignore next */ (
       }
     ] :
       [] // viewState is undefined when view is not initialized yet (ex. during Hard Redirect).
-  }
+  },
+  extraProps
 });
 
 export default Component => connect(
   /* istanbul ignore next */
-  (storeState, { modelDefinition, externalOperations, uiConfig }) => ({
+  (storeState, { modelDefinition, externalOperations, extraProps }) => ({
     viewModelData: getViewModelData(storeState, modelDefinition),
     viewState: getViewState(storeState, modelDefinition),
     permissions: modelDefinition.permissions,
     customOperations: modelDefinition.ui.customOperations,
     externalOperations,
-    uiConfig
+    extraProps
   }), {
     exitView: /* istanbul ignore next */ _ => softRedirectView({ name: VIEW_SEARCH }),
     saveInstance,
@@ -131,5 +130,5 @@ export default Component => connect(
   mergeProps
 )(
   /* istanbul ignore next */
-  ({ viewModel }) => <Component model={viewModel} />
+  ({ viewModel, extraProps }) => <Component model={viewModel} extraProps={extraProps}/>
 );
