@@ -1,41 +1,16 @@
 import { call, put, cancel, takeLatest } from 'redux-saga/effects';
-import searchViewScenario from './views/search/scenario';
-import createViewScenario from './views/create/scenario';
-import editViewScenario from './views/edit/scenario';
-import showViewScenario from './views/show/scenario';
-import errorViewScenario from './views/error/scenario';
-import { isAllowed } from './lib';
 import {
   ACTIVE_VIEW_CHANGE,
   DEFAULT_VIEW,
   ERROR_UNKNOWN_VIEW,
   ERROR_FORBIDDEN_VIEW,
-
   VIEW_HARD_REDIRECT,
-
-  VIEW_SEARCH,
-  VIEW_CREATE,
-  VIEW_EDIT,
-  VIEW_SHOW,
-  VIEW_ERROR,
-
-  PERMISSION_CREATE,
-  PERMISSION_EDIT,
-  PERMISSION_VIEW
+  VIEW_ERROR
 } from './common/constants';
-
-const isStandardView = viewName => [VIEW_CREATE, VIEW_EDIT, VIEW_SHOW, VIEW_SEARCH].indexOf(viewName) > -1;
+import { sagas, isStandardView } from './views';
 
 export default function*(modelDefinition) {
-  const { crudOperations } = modelDefinition.permissions;
-
-  const initializeViewSagas = {
-    ...(isAllowed(crudOperations, PERMISSION_VIEW) ? { [VIEW_SEARCH]: searchViewScenario } : null),
-    ...(isAllowed(crudOperations, PERMISSION_CREATE) ? { [VIEW_CREATE]: createViewScenario } : null),
-    ...(isAllowed(crudOperations, PERMISSION_EDIT) ? { [VIEW_EDIT]: editViewScenario } : null),
-    ...(isAllowed(crudOperations, PERMISSION_VIEW) ? { [VIEW_SHOW]: showViewScenario } : null),
-    [VIEW_ERROR]: errorViewScenario
-  };
+  const initializeViewSagas = sagas(modelDefinition);
 
   let activeViewScenarioTask;
 
@@ -54,7 +29,6 @@ export default function*(modelDefinition) {
       if (isStandardView(viewName)) {
         throw ERROR_FORBIDDEN_VIEW(viewName);
       }
-
       throw ERROR_UNKNOWN_VIEW(viewName);
     }
 
@@ -100,7 +74,7 @@ export default function*(modelDefinition) {
     let initializeViewSaga = initializeViewSagas[viewName];
 
     if (!initializeViewSaga) {
-      initializeViewSaga = errorViewScenario;
+      initializeViewSaga = initializeViewSagas[VIEW_ERROR];
       viewState = isStandardView(viewName) ?
         ERROR_FORBIDDEN_VIEW(viewName) :
         ERROR_UNKNOWN_VIEW(viewName);
@@ -133,7 +107,7 @@ export default function*(modelDefinition) {
         meta: { source }
       });
 
-      activeViewScenarioTask = yield call(errorViewScenario, {
+      activeViewScenarioTask = yield call(initializeViewSagas[VIEW_ERROR], {
         modelDefinition,
         softRedirectSaga,
         viewState: err,

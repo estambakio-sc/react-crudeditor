@@ -1,13 +1,6 @@
 import { buildViewSelectorWrapper } from '../../selectorWrapper';
-
-import {
-  VIEW_NAME
-} from './constants';
-
-import {
-  STATUS_REDIRECTING,
-  STATUS_CREATING
-} from '../../common/constants';
+import { VIEW_NAME } from './constants';
+import { STATUS_REDIRECTING, STATUS_CREATING } from '../../common/constants';
 
 const wrapper = buildViewSelectorWrapper(VIEW_NAME);
 

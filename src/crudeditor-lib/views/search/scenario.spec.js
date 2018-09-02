@@ -4,13 +4,15 @@ import { call } from 'redux-saga/effects';
 import scenarioSaga from './scenario';
 import {
   VIEW_NAME,
-  VIEW_INITIALIZE_REQUEST,
-  VIEW_INITIALIZE_SUCCESS,
-  VIEW_INITIALIZE_FAIL,
   INSTANCES_SEARCH_REQUEST,
   INSTANCES_SEARCH_SUCCESS,
   INSTANCES_SEARCH_FAIL
 } from './constants';
+import {
+  VIEW_INITIALIZE_REQUEST,
+  VIEW_INITIALIZE_SUCCESS,
+  VIEW_INITIALIZE_FAIL
+} from '../../common/constants';
 
 const instances = [{ a: 1 }, { b: 2 }];
 
@@ -58,10 +60,10 @@ describe('search view / scenario', () => {
     }, scenarioSaga, arg);
 
     expect(dispatched.map(({ type }) => type)).to.deep.equal([
-      VIEW_INITIALIZE_REQUEST,
+      VIEW_INITIALIZE_REQUEST(VIEW_NAME),
       INSTANCES_SEARCH_REQUEST,
       INSTANCES_SEARCH_SUCCESS,
-      VIEW_INITIALIZE_SUCCESS
+      VIEW_INITIALIZE_SUCCESS(VIEW_NAME)
     ])
   });
 
@@ -92,10 +94,10 @@ describe('search view / scenario', () => {
     });
 
     expect(dispatched.map(({ type }) => type)).to.deep.equal([
-      VIEW_INITIALIZE_REQUEST,
+      VIEW_INITIALIZE_REQUEST(VIEW_NAME),
       INSTANCES_SEARCH_REQUEST,
       INSTANCES_SEARCH_FAIL,
-      VIEW_INITIALIZE_FAIL
+      VIEW_INITIALIZE_FAIL(VIEW_NAME)
     ])
   });
 })

@@ -6,14 +6,12 @@ import deleteSaga from './delete';
 import {
   INSTANCES_DELETE_REQUEST,
   INSTANCES_DELETE_SUCCESS,
-  INSTANCES_DELETE_FAIL
-} from '../../../common/constants';
-import { VIEW_REDIRECT_REQUEST } from '../constants';
-
-import {
+  INSTANCES_DELETE_FAIL,
+  VIEW_REDIRECT_REQUEST,
   VIEW_ERROR,
   VIEW_SEARCH
 } from '../../../common/constants';
+import { VIEW_NAME } from '../constants';
 
 describe('edit view / workerSagas / delete', () => {
   const instances = [{
@@ -51,7 +49,7 @@ describe('edit view / workerSagas / delete', () => {
     expect(dispatched.map(({ type }) => type)).deep.equal([
       INSTANCES_DELETE_REQUEST,
       INSTANCES_DELETE_SUCCESS,
-      VIEW_REDIRECT_REQUEST
+      VIEW_REDIRECT_REQUEST(VIEW_NAME)
     ])
 
     expect(dispatched.find(({ type }) => type === INSTANCES_DELETE_SUCCESS).payload).deep.equal({ instances })

@@ -27,13 +27,7 @@ import {
 
   TAB_SELECT,
 
-  VIEW_INITIALIZE_REQUEST,
-  VIEW_INITIALIZE_FAIL,
-  VIEW_INITIALIZE_SUCCESS,
-
-  VIEW_REDIRECT_REQUEST,
-  VIEW_REDIRECT_FAIL,
-  VIEW_REDIRECT_SUCCESS
+  VIEW_NAME
 } from './constants';
 
 import {
@@ -49,7 +43,15 @@ import {
   INSTANCES_DELETE_FAIL,
   INSTANCES_DELETE_REQUEST,
 
-  UNPARSABLE_FIELD_VALUE
+  UNPARSABLE_FIELD_VALUE,
+
+  VIEW_INITIALIZE_REQUEST,
+  VIEW_INITIALIZE_FAIL,
+  VIEW_INITIALIZE_SUCCESS,
+
+  VIEW_REDIRECT_REQUEST,
+  VIEW_REDIRECT_FAIL,
+  VIEW_REDIRECT_SUCCESS,
 } from '../../common/constants';
 
 import {
@@ -161,7 +163,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
   storeState = cloneDeep(defaultStoreStateTemplate),
   { type, payload, error, meta }
 ) => {
-  if (storeState.status === STATUS_UNINITIALIZED && type !== VIEW_INITIALIZE_REQUEST) {
+  if (storeState.status === STATUS_UNINITIALIZED && type !== VIEW_INITIALIZE_REQUEST(VIEW_NAME)) {
     return storeState;
   }
 
@@ -170,13 +172,13 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
   /* eslint-disable padded-blocks */
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  if (type === VIEW_INITIALIZE_REQUEST) {
+  if (type === VIEW_INITIALIZE_REQUEST(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_INITIALIZING;
 
-  } else if (type === VIEW_INITIALIZE_FAIL) {
+  } else if (type === VIEW_INITIALIZE_FAIL(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_UNINITIALIZED;
 
-  } else if (type === VIEW_INITIALIZE_SUCCESS) {
+  } else if (type === VIEW_INITIALIZE_SUCCESS(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_READY;
 
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
@@ -189,13 +191,13 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
 
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  } else if (type === VIEW_REDIRECT_REQUEST) {
+  } else if (type === VIEW_REDIRECT_REQUEST(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_REDIRECTING;
 
-  } else if (type === VIEW_REDIRECT_FAIL) {
+  } else if (type === VIEW_REDIRECT_FAIL(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_READY;
 
-  } else if (type === VIEW_REDIRECT_SUCCESS) {
+  } else if (type === VIEW_REDIRECT_SUCCESS(VIEW_NAME)) {
     // Reseting the store to initial uninitialized state.
     newStoreStateSlice = u.constant(cloneDeep(defaultStoreStateTemplate));
 
@@ -224,7 +226,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
       newStoreStateSlice.offset = payload.offset;
     }
 
-    const formLayout = modelDefinition.ui.edit.formLayout(instance).
+    const formLayout = modelDefinition.ui.views[VIEW_NAME].formLayout(instance).
       filter(entry => !!entry); // Removing empty tabs/sections and null tabs/sections/fields.
 
     checkFormLayout(formLayout);

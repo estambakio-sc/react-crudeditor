@@ -1,22 +1,14 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { buildViewSelectorWrapper } from '../../selectorWrapper';
-import {
-  cleanFilter,
-  getDefaultSortField
-} from './lib';
-import {
-  DEFAULT_MAX,
-  DEFAULT_OFFSET,
-  DEFAULT_ORDER,
-
-  VIEW_NAME
-} from './constants';
+import { cleanFilter, getDefaultSortField } from './lib';
+import { DEFAULT_MAX, DEFAULT_OFFSET, DEFAULT_ORDER, VIEW_NAME } from './constants';
 import {
   STATUS_DELETING,
   STATUS_INITIALIZING,
   STATUS_REDIRECTING,
   STATUS_SEARCHING,
-  PERMISSION_CREATE
+  PERMISSION_CREATE,
+  VIEW_CREATE
 } from '../../common/constants';
 import { isAllowed } from '../../lib';
 
@@ -36,7 +28,9 @@ const _getViewState = ({
   }
 }, {
   ui: {
-    search: searchMeta
+    views: {
+      search: searchMeta
+    }
   }
 }) => {
   const filter = cleanFilter(resultFilter);
@@ -66,7 +60,7 @@ export const
     modelDefinition.permissions.crudOperations,
     PERMISSION_CREATE
   ) &&
-    cloneDeep(modelDefinition.ui.create.defaultNewInstance({
+    cloneDeep(modelDefinition.ui.views[VIEW_CREATE].defaultNewInstance({ // TODO maybe move above create view?
       filter: {}, // Setting filter to empty object if it is not specified in view state.
       ..._getViewState(storeState, modelDefinition)
     })) ||
@@ -79,9 +73,11 @@ export const
     model: modelMeta,
     ui: {
       spinner,
-      search: {
-        resultFields,
-        searchableFields
+      views: {
+        search: {
+          resultFields,
+          searchableFields
+        }
       }
     }
   }) => ({

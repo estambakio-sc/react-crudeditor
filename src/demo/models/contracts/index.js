@@ -1,10 +1,12 @@
 import api from './api';
-import DateRangeCellRender from './components/DateRangeCellRender';
-import StatusField from './components/StatusField';
 import translations from './i18n';
+
+// custom components
 import CustomSpinner from './components/CustomSpinner';
 import ContractReferenceSearch from './components/ContractReferenceSearch';
 import CustomTabComponent from './components/CustomTabComponent';
+import DateRangeCellRender from './components/DateRangeCellRender';
+import StatusField from './components/StatusField';
 
 // connected components (entry points) per view
 import SearchMain from '../../../components/SearchMain';
@@ -12,6 +14,9 @@ import EditMain from '../../../components/EditMain';
 import CreateMain from '../../../components/CreateMain';
 import ShowMain from '../../../components/ShowMain';
 import ErrorMain from '../../../components/ErrorMain';
+
+// custom view component
+import ExportView from './components/ExportView';
 
 import {
   FIELD_TYPE_BOOLEAN,
@@ -401,62 +406,72 @@ export default {
   },
   api,
   ui: {
-    search: /* istanbul ignore next */ _ => ({
-      searchableFields: [
-        { name: 'contractId' },
-        { name: 'description' },
-        { name: 'extContractId' },
-        { name: 'extContractLineId' },
-        { name: 'parentContract', render: { component: ContractReferenceSearch } },
-        { name: 'statusId', render: { component: StatusField, value: { converter: {
-          format: value => value || value === 0 ? parseInt(value, 16) : null,
-          parse: value => value || value === 0 ? value.toString(16) : null
-        } } } },
-        { name: 'maxOrderValue' },
-        // THE SAME CAN BE ACHIEVED WITH THE FOLLOWING
-        // EXAMPLE OF USING BUILT-IN RANGE INPUT COMPONENT:
-        // { name: 'maxOrderValue', render: { component: BUILTIN_RANGE_INPUT, props: { type: 'integer' } } },
-        { name: 'createdOn' }
-      ],
-      resultFields: [
-        { name: 'contractId', sortable: true },
-        { name: 'description', sortable: true },
-        { name: 'extContractId', sortable: true },
-        { name: 'extContractLineId', sortable: true },
-        { name: 'validRange', component: DateRangeCellRender }
-      ],
-      component: SearchMain
-    }),
-    instanceLabel: /* istanbul ignore next */ instance => instance._objectLabel || instance.contractId || '',
-    create: {
-      defaultNewInstance: /* istanbul ignore next */ ({ filter } = {}) => Object.keys(filter || {}).reduce(
-        (rez, fieldName) => {
-          const isRange = ['maxOrderValue', 'createdOn'].indexOf(fieldName) !== -1;
+    views: {
+      search: _ => ({
+        searchableFields: [
+          { name: 'contractId' },
+          { name: 'description' },
+          { name: 'extContractId' },
+          { name: 'extContractLineId' },
+          { name: 'parentContract', render: { component: ContractReferenceSearch } },
+          { name: 'statusId', render: { component: StatusField, value: { converter: {
+            format: value => value || value === 0 ? parseInt(value, 16) : null,
+            parse: value => value || value === 0 ? value.toString(16) : null
+          } } } },
+          { name: 'maxOrderValue' },
+          // THE SAME CAN BE ACHIEVED WITH THE FOLLOWING
+          // EXAMPLE OF USING BUILT-IN RANGE INPUT COMPONENT:
+          // { name: 'maxOrderValue', render: { component: BUILTIN_RANGE_INPUT, props: { type: 'integer' } } },
+          { name: 'createdOn' }
+        ],
+        resultFields: [
+          { name: 'contractId', sortable: true },
+          { name: 'description', sortable: true },
+          { name: 'extContractId', sortable: true },
+          { name: 'extContractLineId', sortable: true },
+          { name: 'validRange', component: DateRangeCellRender }
+        ],
+        component: SearchMain
+      }),
+      create: _ => ({
+        defaultNewInstance: /* istanbul ignore next */ ({ filter } = {}) => Object.keys(filter || {}).reduce(
+          (rez, fieldName) => {
+            const isRange = ['maxOrderValue', 'createdOn'].indexOf(fieldName) !== -1;
 
-          return isRange || filter[fieldName] === null ?
-            rez :
-            {
-              ...rez,
-              [fieldName]: filter[fieldName]
-            };
-        },
-        {}
-      ),
-      formLayout: buildFormLayout(VIEW_CREATE),
-      component: CreateMain
+            return isRange || filter[fieldName] === null ?
+              rez :
+              {
+                ...rez,
+                [fieldName]: filter[fieldName]
+              };
+          },
+          {}
+        ),
+        formLayout: buildFormLayout(VIEW_CREATE),
+        component: CreateMain
+      }),
+      edit: _ => ({
+        formLayout: buildFormLayout(VIEW_EDIT),
+        component: EditMain
+      }),
+      show: _ => ({
+        formLayout: buildFormLayout(VIEW_SHOW),
+        component: ShowMain
+      }),
+      error: _ => ({
+        component: ErrorMain
+      }),
+
+      // custom view
+      export: _ => ({
+        component: ExportView
+      })
     },
-    edit: {
-      formLayout: buildFormLayout(VIEW_EDIT),
-      component: EditMain
-    },
-    show: {
-      formLayout: buildFormLayout(VIEW_SHOW),
-      component: ShowMain
-    },
-    error: {
-      component: ErrorMain
-    },
-    spinner: CustomSpinner,
+
+    instanceLabel: /* istanbul ignore next */ instance => instance._objectLabel || instance.contractId || '',
+
+    spinner: CustomSpinner, // TODO maybe introduce components: { spinner: ..., } - collection of shared components
+
     customOperations: /* istanbul ignore next */ instance => [{
       handler: _ => ({
         name: VIEW_CREATE,

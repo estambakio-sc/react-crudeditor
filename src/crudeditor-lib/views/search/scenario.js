@@ -7,18 +7,14 @@ import scenarioSaga from '../../common/scenario';
 
 import {
   INSTANCES_DELETE,
-  VIEW_SOFT_REDIRECT
-} from '../../common/constants';
-
-import {
-  INSTANCES_SEARCH,
+  VIEW_SOFT_REDIRECT,
 
   VIEW_INITIALIZE_REQUEST,
   VIEW_INITIALIZE_FAIL,
   VIEW_INITIALIZE_SUCCESS,
+} from '../../common/constants';
 
-  VIEW_NAME
-} from './constants';
+import { INSTANCES_SEARCH, VIEW_NAME } from './constants';
 
 const transitions = {
   blocking: {
@@ -53,7 +49,7 @@ export default function*({
   source
 }) {
   yield put({
-    type: VIEW_INITIALIZE_REQUEST,
+    type: VIEW_INITIALIZE_REQUEST(VIEW_NAME),
     payload: {
       hideSearchForm
     },
@@ -76,7 +72,7 @@ export default function*({
     });
   } catch (err) {
     yield put({
-      type: VIEW_INITIALIZE_FAIL,
+      type: VIEW_INITIALIZE_FAIL(VIEW_NAME),
       payload: err,
       error: true,
       meta: { source }
@@ -86,7 +82,7 @@ export default function*({
   }
 
   yield put({
-    type: VIEW_INITIALIZE_SUCCESS,
+    type: VIEW_INITIALIZE_SUCCESS(VIEW_NAME),
     meta: { source }
   });
 

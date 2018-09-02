@@ -141,7 +141,7 @@
       "./config/mocha-config.js"
     ],
     "statements": 50,
-    "branches": 40,
+    "branches": 30,
     "functions": 40,
     "lines": 50
   }

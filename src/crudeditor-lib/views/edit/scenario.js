@@ -9,18 +9,18 @@ import scenarioSaga from '../../common/scenario';
 
 import {
   INSTANCES_DELETE,
-  VIEW_SOFT_REDIRECT
+  VIEW_SOFT_REDIRECT,
+
+  VIEW_INITIALIZE_REQUEST,
+  VIEW_INITIALIZE_FAIL,
+  VIEW_INITIALIZE_SUCCESS
 } from '../../common/constants';
 
 import {
   INSTANCE_SAVE,
   ADJACENT_INSTANCE_EDIT,
   TAB_SELECT,
-  VIEW_NAME,
-
-  VIEW_INITIALIZE_REQUEST,
-  VIEW_INITIALIZE_FAIL,
-  VIEW_INITIALIZE_SUCCESS
+  VIEW_NAME
 } from './constants';
 
 const transitions = {
@@ -46,7 +46,7 @@ export default function*({
   source
 }) {
   yield put({
-    type: VIEW_INITIALIZE_REQUEST,
+    type: VIEW_INITIALIZE_REQUEST(VIEW_NAME),
     meta: { source }
   });
 
@@ -63,7 +63,7 @@ export default function*({
     });
   } catch (err) {
     yield put({
-      type: VIEW_INITIALIZE_FAIL,
+      type: VIEW_INITIALIZE_FAIL(VIEW_NAME),
       payload: err,
       error: true,
       meta: { source }
@@ -79,7 +79,7 @@ export default function*({
   });
 
   yield put({
-    type: VIEW_INITIALIZE_SUCCESS,
+    type: VIEW_INITIALIZE_SUCCESS(VIEW_NAME),
     meta: { source }
   });
 

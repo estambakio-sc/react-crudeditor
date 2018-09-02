@@ -44,6 +44,10 @@ export const
   COMPONENT_NAME_INPUT = 'input',
   COMPONENT_NAME_RANGE_INPUT = 'rangeInput';
 
+export const getViewMeta = ({ modelDefinition, viewName }) => modelDefinition.ui.views[viewName] ?
+  cloneDeep(modelDefinition.ui.views[viewName]()) :
+  {};
+
 /*
  * The function receives render object with component name in "component" property.
  * It returns React Component with the name and UI Type corrresponding to the Component.

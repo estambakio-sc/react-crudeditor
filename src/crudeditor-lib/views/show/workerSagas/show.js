@@ -1,12 +1,6 @@
 import { call, put } from 'redux-saga/effects';
-
 import { getLogicalKeyBuilder } from '../../lib';
-
-import {
-  INSTANCE_SHOW_FAIL,
-  INSTANCE_SHOW_REQUEST,
-  INSTANCE_SHOW_SUCCESS
-} from '../constants';
+import { INSTANCE_SHOW_FAIL, INSTANCE_SHOW_REQUEST, INSTANCE_SHOW_SUCCESS } from '../constants';
 
 /* //
  * XXX: in case of failure, a worker saga must dispatch an appropriate action and exit by throwing error(s).

@@ -13,7 +13,9 @@ describe('search view / index / getUi', () => {
         }
       }
     },
-    ui: {}
+    ui: {
+      views: {}
+    }
   }
 
   it('should generate proper ui', () => {

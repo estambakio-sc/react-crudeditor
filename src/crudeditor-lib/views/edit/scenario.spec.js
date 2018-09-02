@@ -4,15 +4,18 @@ import { call } from 'redux-saga/effects';
 import scenarioSaga from './scenario';
 
 import {
+  VIEW_NAME,
   TAB_SELECT,
-
-  VIEW_INITIALIZE_REQUEST,
-  VIEW_INITIALIZE_FAIL,
-  VIEW_INITIALIZE_SUCCESS,
   INSTANCE_EDIT_REQUEST,
   INSTANCE_EDIT_SUCCESS,
   INSTANCE_EDIT_FAIL
 } from './constants';
+
+import {
+  VIEW_INITIALIZE_REQUEST,
+  VIEW_INITIALIZE_FAIL,
+  VIEW_INITIALIZE_SUCCESS
+} from '../../common/constants';
 
 const arg = {
   modelDefinition: {
@@ -36,11 +39,11 @@ describe('edit view / scenario', () => {
     }, scenarioSaga, arg);
 
     expect(dispatched.map(({ type }) => type)).to.deep.equal([
-      VIEW_INITIALIZE_REQUEST,
+      VIEW_INITIALIZE_REQUEST(VIEW_NAME),
       INSTANCE_EDIT_REQUEST,
       INSTANCE_EDIT_SUCCESS,
       TAB_SELECT,
-      VIEW_INITIALIZE_SUCCESS
+      VIEW_INITIALIZE_SUCCESS(VIEW_NAME)
     ])
   });
 
@@ -70,10 +73,10 @@ describe('edit view / scenario', () => {
     });
 
     expect(dispatched.map(({ type }) => type)).to.deep.equal([
-      VIEW_INITIALIZE_REQUEST,
+      VIEW_INITIALIZE_REQUEST(VIEW_NAME),
       INSTANCE_EDIT_REQUEST,
       INSTANCE_EDIT_FAIL,
-      VIEW_INITIALIZE_FAIL
+      VIEW_INITIALIZE_FAIL(VIEW_NAME)
     ])
   });
 })

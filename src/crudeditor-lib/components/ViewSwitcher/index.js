@@ -1,21 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import searchView from '../../views/search/container';
-import createView from '../../views/create/container';
-import editView from '../../views/edit/container';
-import showView from '../../views/show/container';
-import errorView from '../../views/error/container';
-
-import {
-  VIEW_SEARCH,
-  VIEW_CREATE,
-  VIEW_EDIT,
-  VIEW_SHOW,
-  VIEW_ERROR
-} from '../../common/constants';
-
+import { containers as viewContainers } from '../../views';
 import WithAlerts from '../WithAlertsHOC';
 
 const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, extraProps }, { i18n }) => {
@@ -23,13 +9,7 @@ const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, ext
     return null;
   }
 
-  const containers = {
-    [VIEW_SEARCH]: searchView,
-    [VIEW_CREATE]: createView,
-    [VIEW_EDIT]: editView,
-    [VIEW_SHOW]: showView,
-    [VIEW_ERROR]: errorView
-  }
+  const containers = viewContainers(modelDefinition);
 
   if (Object.keys(containers).indexOf(activeViewName) === -1) {
     return (
@@ -37,7 +17,12 @@ const ViewSwitcher = ({ activeViewName, modelDefinition, externalOperations, ext
     )
   }
 
-  const ViewComponent = modelDefinition.ui[activeViewName].component;
+  const ViewComponent = (modelDefinition.ui.views[activeViewName] || {}).component;
+
+  if (!ViewComponent) {
+    console.log(`Component not defined for view "${activeViewName}"!`);
+    return null;
+  }
 
   const ViewContainer = containers[activeViewName](ViewComponent);
 

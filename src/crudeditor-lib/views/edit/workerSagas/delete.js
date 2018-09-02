@@ -1,11 +1,10 @@
 import { call, put } from 'redux-saga/effects';
-
 import deleteSaga from '../../../common/workerSagas/delete';
-import { VIEW_REDIRECT_REQUEST } from '../constants';
-
+import { VIEW_NAME } from '../constants';
 import {
   VIEW_ERROR,
-  VIEW_SEARCH
+  VIEW_SEARCH,
+  VIEW_REDIRECT_REQUEST
 } from '../../../common/constants';
 
 /*
@@ -28,7 +27,7 @@ export default function*({
   });
 
   yield put({
-    type: VIEW_REDIRECT_REQUEST,
+    type: VIEW_REDIRECT_REQUEST(VIEW_NAME),
     meta
   });
 

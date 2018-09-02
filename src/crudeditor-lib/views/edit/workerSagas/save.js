@@ -1,16 +1,11 @@
 import { call, select } from 'redux-saga/effects';
-
 import adjacentSaga from '../../../common/workerSagas/adjacent';
 import redirectSaga from '../../../common/workerSagas/redirect';
 import validateSaga from '../../../common/workerSagas/validate';
 import updateSaga from '../../../common/workerSagas/save';
 import { VIEW_CREATE } from '../../../common/constants';
 import { getDefaultNewInstance } from '../../search/selectors';
-
-import {
-  AFTER_ACTION_NEXT,
-  AFTER_ACTION_NEW
-} from '../constants';
+import { AFTER_ACTION_NEXT, AFTER_ACTION_NEW } from '../constants';
 
 /*
  * XXX: in case of failure, a worker saga must dispatch an appropriate action and exit by throwing error(s).

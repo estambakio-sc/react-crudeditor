@@ -6,15 +6,15 @@ import {
   STATUS_REDIRECTING,
   STATUS_UNINITIALIZED,
 
-  ERROR_CODE_INTERNAL
-} from '../../common/constants';
+  ERROR_CODE_INTERNAL,
 
-import {
   VIEW_INITIALIZE,
   VIEW_REDIRECT_REQUEST,
   VIEW_REDIRECT_FAIL,
   VIEW_REDIRECT_SUCCESS
-} from './constants';
+} from '../../common/constants';
+
+import { VIEW_NAME } from './constants';
 
 const defaultStoreStateTemplate = {
 
@@ -40,7 +40,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
   storeState = cloneDeep(defaultStoreStateTemplate),
   { type, payload, error, meta }
 ) => {
-  if (storeState.status === STATUS_UNINITIALIZED && type !== VIEW_INITIALIZE) {
+  if (storeState.status === STATUS_UNINITIALIZED && type !== VIEW_INITIALIZE(VIEW_NAME)) {
     return storeState;
   }
 
@@ -49,7 +49,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
   /* eslint-disable padded-blocks */
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  if ([VIEW_INITIALIZE, VIEW_REDIRECT_FAIL].indexOf(type) > -1) {
+  if ([VIEW_INITIALIZE(VIEW_NAME), VIEW_REDIRECT_FAIL(VIEW_NAME)].indexOf(type) > -1) {
     const errors = Array.isArray(payload) ? payload : [payload];
 
     newStoreStateSlice.errors = errors.map(({ code, ...rest }) => ({
@@ -61,12 +61,12 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
 
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  } else if (type === VIEW_REDIRECT_REQUEST) {
+  } else if (type === VIEW_REDIRECT_REQUEST(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_REDIRECTING;
 
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  } else if (type === VIEW_REDIRECT_SUCCESS) {
+  } else if (type === VIEW_REDIRECT_SUCCESS(VIEW_NAME)) {
     // Reseting the store to initial uninitialized state.
     newStoreStateSlice = u.constant(cloneDeep(defaultStoreStateTemplate));
 

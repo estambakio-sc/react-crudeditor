@@ -1,10 +1,12 @@
 import { VIEW_NAME } from './constants';
-import { buildFormLayout } from '../lib';
+import { buildFormLayout, getViewMeta } from '../lib';
 
 export { getViewState } from './selectors';
 
 export const getUi = modelDefinition => {
-  const showMeta = modelDefinition.ui.show || {};
+  const showMeta = getViewMeta({ modelDefinition, viewName: VIEW_NAME });
+
+  // TODO add validation for object shape
 
   showMeta.formLayout = buildFormLayout({
     customBuilder: showMeta.formLayout,

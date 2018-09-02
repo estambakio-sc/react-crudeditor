@@ -1,14 +1,16 @@
 import { VIEW_NAME } from './constants';
-import { buildFormLayout } from '../lib';
+import { buildFormLayout, getViewMeta } from '../lib';
 
 export { getViewState } from './selectors';
 
 export const getUi = modelDefinition => {
-  const createMeta = modelDefinition.ui.create || {};
+  const createMeta = getViewMeta({ modelDefinition, viewName: VIEW_NAME });
 
   if (!createMeta.defaultNewInstance) {
     createMeta.defaultNewInstance = _ => ({});
   }
+
+  // TODO add validation for object shape
 
   createMeta.formLayout = buildFormLayout({
     customBuilder: createMeta.formLayout,

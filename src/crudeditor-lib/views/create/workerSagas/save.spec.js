@@ -3,7 +3,7 @@ import { runSaga } from 'redux-saga';
 import { call } from 'redux-saga/effects';
 import redirectSaga from '../../../common/workerSagas/redirect';
 import saveSaga from './save';
-import { VIEW_EDIT, VIEW_SEARCH } from '../../../common/constants';
+import { VIEW_EDIT, VIEW_SEARCH, VIEW_INITIALIZE } from '../../../common/constants';
 import {
   AFTER_ACTION_NEW,
   VIEW_NAME,
@@ -13,7 +13,6 @@ import {
   INSTANCE_VALIDATE_SUCCESS,
   INSTANCE_SAVE_REQUEST,
   INSTANCE_SAVE_SUCCESS,
-  VIEW_INITIALIZE,
   INSTANCE_VALIDATE_FAIL,
   INSTANCE_SAVE_FAIL
 } from '../constants';
@@ -124,7 +123,7 @@ describe('create / workerSagas / save', () => {
       INSTANCE_VALIDATE_SUCCESS,
       INSTANCE_SAVE_REQUEST,
       INSTANCE_SAVE_SUCCESS,
-      VIEW_INITIALIZE
+      VIEW_INITIALIZE(VIEW_NAME)
     ])
   });
 

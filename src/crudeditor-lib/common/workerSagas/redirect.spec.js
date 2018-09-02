@@ -4,10 +4,7 @@ import { call } from 'redux-saga/effects';
 import sinon from 'sinon';
 import redirectSaga from './redirect';
 import { VIEW_SEARCH, VIEW_EDIT } from '../constants';
-import {
-  VIEW_REDIRECT_REQUEST as SEARCH_VIEW_REDIRECT_REQUEST,
-  VIEW_REDIRECT_FAIL as SEARCH_VIEW_REDIRECT_FAIL
-} from '../../views/search/constants';
+import { VIEW_REDIRECT_REQUEST, VIEW_REDIRECT_FAIL } from '../constants';
 
 describe('common / workerSagas / redirect saga', () => {
   const softRedirectSaga = _ => null;
@@ -34,7 +31,7 @@ describe('common / workerSagas / redirect saga', () => {
     it('should put VIEW_REDIRECT_REQUEST', () => {
       const { value, done } = gen.next();
       expect(value).to.have.ownProperty('PUT');
-      expect(value.PUT.action.type).to.equal(SEARCH_VIEW_REDIRECT_REQUEST);
+      expect(value.PUT.action.type).to.equal(VIEW_REDIRECT_REQUEST(VIEW_SEARCH));
       expect(value.PUT.action.meta).to.deep.equal(arg.action.meta)
       expect(done).to.be.false; // eslint-disable-line no-unused-expressions
     });
@@ -83,11 +80,11 @@ describe('common / workerSagas / redirect saga', () => {
       });
 
       expect(dispatched.map(({ type }) => type)).deep.equal([
-        SEARCH_VIEW_REDIRECT_REQUEST,
-        SEARCH_VIEW_REDIRECT_FAIL
+        VIEW_REDIRECT_REQUEST(VIEW_SEARCH),
+        VIEW_REDIRECT_FAIL(VIEW_SEARCH)
       ])
 
-      expect(dispatched.find(({ type }) => type === SEARCH_VIEW_REDIRECT_FAIL).payload).to.be.deep.equal(err);
+      expect(dispatched.find(({ type }) => type === VIEW_REDIRECT_FAIL(VIEW_SEARCH)).payload).to.be.deep.equal(err);
     });
   })
 });

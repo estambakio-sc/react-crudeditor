@@ -5,7 +5,13 @@ import { getModelMessage, getFieldErrorMessage, getFieldLabel, getTabLabel } fro
 
 import {
   INSTANCES_DELETE_FAIL,
-  INSTANCES_DELETE_SUCCESS
+  INSTANCES_DELETE_SUCCESS,
+  VIEW_REDIRECT_FAIL,
+  VIEW_SEARCH,
+  VIEW_CREATE,
+  VIEW_EDIT,
+  VIEW_SHOW,
+  VIEW_ERROR
 } from '../../common/constants';
 
 import {
@@ -13,8 +19,7 @@ import {
   INSTANCE_SAVE_SUCCESS as CREATE_INSTANCE_SAVE_SUCCESS,
   INSTANCE_VALIDATE_FAIL as CREATE_INSTANCE_VALIDATE_FAIL,
   INSTANCE_VALIDATE_SUCCESS as CREATE_INSTANCE_VALIDATE_SUCCESS,
-  ALL_INSTANCE_FIELDS_VALIDATE_FAIL as CREATE_ALL_INSTANCE_FIELDS_VALIDATE_FAIL,
-  VIEW_REDIRECT_FAIL as CREATE_VIEW_REDIRECT_FAIL
+  ALL_INSTANCE_FIELDS_VALIDATE_FAIL as CREATE_ALL_INSTANCE_FIELDS_VALIDATE_FAIL
 } from '../../views/create/constants';
 
 import {
@@ -23,22 +28,12 @@ import {
   INSTANCE_VALIDATE_FAIL as EDIT_INSTANCE_VALIDATE_FAIL,
   INSTANCE_VALIDATE_SUCCESS as EDIT_INSTANCE_VALIDATE_SUCCESS,
   ALL_INSTANCE_FIELDS_VALIDATE_FAIL as EDIT_ALL_INSTANCE_FIELDS_VALIDATE_FAIL,
-  VIEW_REDIRECT_FAIL as EDIT_VIEW_REDIRECT_FAIL,
   ADJACENT_INSTANCE_EDIT_FAIL
 } from '../../views/edit/constants';
 
 import {
-  VIEW_REDIRECT_FAIL as SEARCH_VIEW_REDIRECT_FAIL
-} from '../../views/search/constants';
-
-import {
-  VIEW_REDIRECT_FAIL as SHOW_VIEW_REDIRECT_FAIL,
   ADJACENT_INSTANCE_SHOW_FAIL
 } from '../../views/show/constants';
-
-import {
-  VIEW_REDIRECT_FAIL as ERROR_VIEW_REDIRECT_FAIL
-} from '../../views/error/constants';
 
 export const
   NOTIFICATION_ERROR = 'error',
@@ -305,11 +300,11 @@ const eventsMiddleware = /* istanbul ignore next */ ({ i18n, modelDefinition }) 
       break;
     }
 
-    case SEARCH_VIEW_REDIRECT_FAIL:
-    case CREATE_VIEW_REDIRECT_FAIL:
-    case EDIT_VIEW_REDIRECT_FAIL:
-    case SHOW_VIEW_REDIRECT_FAIL:
-    case ERROR_VIEW_REDIRECT_FAIL: {
+    case VIEW_REDIRECT_FAIL(VIEW_SEARCH): // TODO refactor to generalize for all views
+    case VIEW_REDIRECT_FAIL(VIEW_CREATE):
+    case VIEW_REDIRECT_FAIL(VIEW_EDIT):
+    case VIEW_REDIRECT_FAIL(VIEW_SHOW):
+    case VIEW_REDIRECT_FAIL(VIEW_ERROR): {
       const detailMessages = getErrorMessages(action.payload);
       NotificationManager.create({
         id: NOTIFICATION_ERROR,

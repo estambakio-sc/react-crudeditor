@@ -27,11 +27,13 @@ const arg = {
       validate
     },
     ui: {
-      create: {
-        defaultNewInstance
-      },
-      search: {
-        resultFields: [{ name: 'a' }]
+      views: {
+        create: {
+          defaultNewInstance
+        },
+        search: {
+          resultFields: [{ name: 'a' }]
+        }
       }
     },
     permissions: {

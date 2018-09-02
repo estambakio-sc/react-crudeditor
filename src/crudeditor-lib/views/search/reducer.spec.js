@@ -27,13 +27,15 @@ describe('search view reducer', () => {
 
     const modelDefinition = {
       ui: {
-        search: {
-          searchableFields: [
-            ...fields
-          ],
-          resultFields: [
-            ...fields
-          ]
+        views: {
+          search: {
+            searchableFields: [
+              ...fields
+            ],
+            resultFields: [
+              ...fields
+            ]
+          }
         }
       }
     }

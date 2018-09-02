@@ -4,13 +4,8 @@ import scenario from './scenario';
 import commonScenario from '../../common/scenario';
 import saveSaga from './workerSagas/save';
 import redirectSaga from '../../common/workerSagas/redirect';
-import { VIEW_SOFT_REDIRECT } from '../../common/constants';
-
-import {
-  INSTANCE_SAVE,
-  VIEW_INITIALIZE,
-  VIEW_NAME
-} from './constants';
+import { VIEW_SOFT_REDIRECT, VIEW_INITIALIZE } from '../../common/constants';
+import { INSTANCE_SAVE, VIEW_NAME } from './constants';
 
 const transitions = {
   blocking: {
@@ -33,7 +28,7 @@ describe('create view / scenario', () => {
   it('should put VIEW_INITIALIZE', () => {
     const { value, done } = gen.next();
     expect(value).to.deep.equal(put({
-      type: VIEW_INITIALIZE,
+      type: VIEW_INITIALIZE(VIEW_NAME),
       payload: { predefinedFields: arg.viewState.predefinedFields || {} },
       meta: { source: arg.source }
     }));

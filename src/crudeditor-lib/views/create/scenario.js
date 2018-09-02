@@ -2,12 +2,11 @@ import { put, spawn } from 'redux-saga/effects';
 
 import saveSaga from './workerSagas/save';
 import redirectSaga from '../../common/workerSagas/redirect';
-import { VIEW_SOFT_REDIRECT } from '../../common/constants';
+import { VIEW_SOFT_REDIRECT, VIEW_INITIALIZE } from '../../common/constants';
 import scenarioSaga from '../../common/scenario';
 
 import {
   INSTANCE_SAVE,
-  VIEW_INITIALIZE,
   VIEW_NAME
 } from './constants';
 
@@ -30,7 +29,7 @@ export default function*({
   source
 }) {
   yield put({
-    type: VIEW_INITIALIZE,
+    type: VIEW_INITIALIZE(VIEW_NAME),
     payload: { predefinedFields },
     meta: { source }
   });

@@ -1,28 +1,6 @@
 import { take, cancel, call, fork, cancelled, put } from 'redux-saga/effects';
-
+import { VIEW_REDIRECT_SUCCESS } from './constants';
 import { isSystemError } from '../lib';
-
-import {
-  VIEW_CREATE,
-  VIEW_EDIT,
-  VIEW_SHOW,
-  VIEW_SEARCH,
-  VIEW_ERROR
-} from './constants';
-
-import { VIEW_REDIRECT_SUCCESS as CREATE_VIEW_REDIRECT_SUCCESS } from '../views/create/constants';
-import { VIEW_REDIRECT_SUCCESS as EDIT_VIEW_REDIRECT_SUCCESS } from '../views/edit/constants';
-import { VIEW_REDIRECT_SUCCESS as SHOW_VIEW_REDIRECT_SUCCESS } from '../views/show/constants';
-import { VIEW_REDIRECT_SUCCESS as SEARCH_VIEW_REDIRECT_SUCCESS } from '../views/search/constants';
-import { VIEW_REDIRECT_SUCCESS as ERROR_VIEW_REDIRECT_SUCCESS } from '../views/error/constants';
-
-const VIEW_REDIRECT_SUCCESS = {
-  [VIEW_CREATE]: CREATE_VIEW_REDIRECT_SUCCESS,
-  [VIEW_EDIT]: EDIT_VIEW_REDIRECT_SUCCESS,
-  [VIEW_SHOW]: SHOW_VIEW_REDIRECT_SUCCESS,
-  [VIEW_SEARCH]: SEARCH_VIEW_REDIRECT_SUCCESS,
-  [VIEW_ERROR]: ERROR_VIEW_REDIRECT_SUCCESS
-}
 
 /*
  * View life cycle scenario saga.
@@ -112,7 +90,7 @@ export default /* istanbul ignore next */ function*({
   } finally {
     if (yield cancelled()) {
       yield put({
-        type: VIEW_REDIRECT_SUCCESS[viewName]
+        type: VIEW_REDIRECT_SUCCESS(viewName)
       });
     }
   }

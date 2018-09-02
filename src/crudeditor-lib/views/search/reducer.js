@@ -29,15 +29,9 @@ import {
   INSTANCE_SELECT,
   INSTANCE_DESELECT,
 
-  VIEW_INITIALIZE_REQUEST,
-  VIEW_INITIALIZE_FAIL,
-  VIEW_INITIALIZE_SUCCESS,
+  SEARCH_FORM_TOGGLE,
 
-  VIEW_REDIRECT_REQUEST,
-  VIEW_REDIRECT_FAIL,
-  VIEW_REDIRECT_SUCCESS,
-
-  SEARCH_FORM_TOGGLE
+  VIEW_NAME
 } from './constants';
 
 import {
@@ -54,7 +48,15 @@ import {
   INSTANCES_DELETE_REQUEST,
   INSTANCES_DELETE_SUCCESS,
 
-  UNPARSABLE_FIELD_VALUE
+  UNPARSABLE_FIELD_VALUE,
+
+  VIEW_INITIALIZE_REQUEST,
+  VIEW_INITIALIZE_FAIL,
+  VIEW_INITIALIZE_SUCCESS,
+
+  VIEW_REDIRECT_REQUEST,
+  VIEW_REDIRECT_FAIL,
+  VIEW_REDIRECT_SUCCESS,
 } from '../../common/constants';
 
 const buildDefaultParsedFilter = searchableFields => searchableFields.reduce(
@@ -69,7 +71,9 @@ const buildDefaultParsedFilter = searchableFields => searchableFields.reduce(
 
 const buildDefaultFormattedFilter = ({
   ui: {
-    search: { searchableFields }
+    views: {
+      search: { searchableFields }
+    }
   }
 }) => searchableFields.reduce(
   (rez, {
@@ -92,7 +96,9 @@ const buildDefaultFormattedFilter = ({
 const buildFormattedFilter = ({
   modelDefinition: {
     ui: {
-      search: { searchableFields }
+      views: {
+        search: { searchableFields }
+      }
     }
   },
   filter,
@@ -121,16 +127,16 @@ const buildFormattedFilter = ({
 export const buildDefaultStoreState = modelDefinition => ({
 
   // Active filter as displayed in Search Result.
-  resultFilter: buildDefaultParsedFilter(modelDefinition.ui.search.searchableFields),
+  resultFilter: buildDefaultParsedFilter(modelDefinition.ui.views[VIEW_NAME].searchableFields),
 
   // Raw filter as displayed in Search Criteria.
-  formFilter: buildDefaultParsedFilter(modelDefinition.ui.search.searchableFields),
+  formFilter: buildDefaultParsedFilter(modelDefinition.ui.views[VIEW_NAME].searchableFields),
 
   // Raw filter as communicated to Search fields React Components.
   formattedFilter: buildDefaultFormattedFilter(modelDefinition),
 
   sortParams: {
-    field: getDefaultSortField(modelDefinition.ui.search),
+    field: getDefaultSortField(modelDefinition.ui.views[VIEW_NAME]),
     order: DEFAULT_ORDER
   },
   pageParams: {
@@ -178,7 +184,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => {
   return (storeState = buildDefaultStoreState(modelDefinition), { type, payload, error, meta }) => {
     if (
       storeState.status === STATUS_UNINITIALIZED &&
-      [VIEW_INITIALIZE_REQUEST, INSTANCES_SEARCH_SUCCESS].indexOf(type) === -1
+      [VIEW_INITIALIZE_REQUEST(VIEW_NAME), INSTANCES_SEARCH_SUCCESS].indexOf(type) === -1
     ) {
       return storeState;
     }
@@ -188,7 +194,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => {
     /* eslint-disable padded-blocks */
     // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-    if (type === VIEW_INITIALIZE_REQUEST) {
+    if (type === VIEW_INITIALIZE_REQUEST(VIEW_NAME)) {
       const { hideSearchForm } = payload;
 
       if (typeof hideSearchForm === 'boolean') {
@@ -197,21 +203,21 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => {
 
       newStoreStateSlice.status = STATUS_INITIALIZING;
 
-    } else if (type === VIEW_INITIALIZE_FAIL) {
+    } else if (type === VIEW_INITIALIZE_FAIL(VIEW_NAME)) {
       newStoreStateSlice.status = STATUS_UNINITIALIZED;
 
-    } else if (type === VIEW_INITIALIZE_SUCCESS) {
+    } else if (type === VIEW_INITIALIZE_SUCCESS(VIEW_NAME)) {
       newStoreStateSlice.status = STATUS_READY;
 
     // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-    } else if (type === VIEW_REDIRECT_REQUEST) {
+    } else if (type === VIEW_REDIRECT_REQUEST(VIEW_NAME)) {
       newStoreStateSlice.status = STATUS_REDIRECTING;
 
-    } else if (type === VIEW_REDIRECT_FAIL) {
+    } else if (type === VIEW_REDIRECT_FAIL(VIEW_NAME)) {
       newStoreStateSlice.status = STATUS_READY;
 
-    } else if (type === VIEW_REDIRECT_SUCCESS) {
+    } else if (type === VIEW_REDIRECT_SUCCESS(VIEW_NAME)) {
       // Do not reset store to initial uninitialized state because
       // totalCount, filter, order, sort, etc. must remain after returning from other Views.
       newStoreStateSlice.formFilter = u.constant(cloneDeep(storeState.resultFilter));
@@ -333,7 +339,8 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => {
 
     } else if (type === FORM_FILTER_RESET) {
       newStoreStateSlice.formattedFilter = u.constant(buildDefaultFormattedFilter(modelDefinition));
-      newStoreStateSlice.formFilter = u.constant(buildDefaultParsedFilter(modelDefinition.ui.search.searchableFields));
+      // eslint-disable-next-line max-len
+      newStoreStateSlice.formFilter = u.constant(buildDefaultParsedFilter(modelDefinition.ui.views[VIEW_NAME].searchableFields));
 
     // ███████████████████████████████████████████████████████████████████████████████████████████████████████
 
@@ -351,7 +358,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => {
 
       let converter;
 
-      modelDefinition.ui.search.searchableFields.some(fieldMeta => {
+      modelDefinition.ui.views[VIEW_NAME].searchableFields.some(fieldMeta => {
         if (fieldMeta.name === fieldName) {
           ({ converter } = fieldMeta.render.value);
           return true;

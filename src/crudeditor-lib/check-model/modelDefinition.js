@@ -81,20 +81,25 @@ const modelPropTypes = /* istanbul ignore next */ modelDefinition => ({
     update: allowedSome([PERMISSION_EDIT], modelDefinition) ? PropTypes.func.isRequired : PropTypes.func,
   }),
   ui: PropTypes.shape({
+    views: PropTypes.shape({
+      search: PropTypes.func,
+      create: PropTypes.func,
+      edit: PropTypes.func,
+      show: PropTypes.func,
+      error: PropTypes.func
+    }),
     spinner: PropTypes.func,
-    search: PropTypes.func,
     instanceLabel: PropTypes.func,
-    create: PropTypes.shape({
-      defaultNewInstance: PropTypes.func,
-      formLayout: PropTypes.func
-    }),
-    edit: PropTypes.shape({
-      formLayout: PropTypes.func
-    }),
-    show: PropTypes.shape({
-      formLayout: PropTypes.func
-    }),
-    customViews: PropTypes.objectOf(PropTypes.func),
+    // create: PropTypes.shape({
+    //   defaultNewInstance: PropTypes.func,
+    //   formLayout: PropTypes.func
+    // }),
+    // edit: PropTypes.shape({
+    //   formLayout: PropTypes.func
+    // }),
+    // show: PropTypes.shape({
+    //   formLayout: PropTypes.func
+    // }),
     customOperations: PropTypes.func
   })
 })

@@ -4,8 +4,8 @@ import validateSaga from '../../../common/workerSagas/validate';
 import saveSaga from '../../../common/workerSagas/save';
 import { getDefaultNewInstance } from '../../search/selectors';
 import { isAllowed } from '../../../lib';
-import { VIEW_ERROR, VIEW_EDIT, VIEW_SHOW, PERMISSION_EDIT } from '../../../common/constants';
-import { AFTER_ACTION_NEW, VIEW_INITIALIZE, VIEW_NAME } from '../constants';
+import { VIEW_ERROR, VIEW_EDIT, VIEW_SHOW, PERMISSION_EDIT, VIEW_INITIALIZE } from '../../../common/constants';
+import { AFTER_ACTION_NEW, VIEW_NAME } from '../constants';
 
 /*
  * XXX: in case of failure, a worker saga must dispatch an appropriate action and exit by throwing error(s).
@@ -25,7 +25,7 @@ export default function*({
   if (afterAction === AFTER_ACTION_NEW) {
     // create another instance
     yield put({
-      type: VIEW_INITIALIZE,
+      type: VIEW_INITIALIZE(VIEW_NAME),
       payload: {
         predefinedFields: yield select(storeState => getDefaultNewInstance(storeState, modelDefinition))
       },

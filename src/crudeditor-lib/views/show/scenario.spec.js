@@ -3,14 +3,17 @@ import { runSaga } from 'redux-saga';
 import { call } from 'redux-saga/effects';
 import scenarioSaga from './scenario';
 import {
-  VIEW_INITIALIZE_REQUEST,
-  VIEW_INITIALIZE_SUCCESS,
-  VIEW_INITIALIZE_FAIL,
   INSTANCE_SHOW_REQUEST,
   INSTANCE_SHOW_SUCCESS,
   INSTANCE_SHOW_FAIL,
-  TAB_SELECT
+  TAB_SELECT,
+  VIEW_NAME
 } from './constants';
+import {
+  VIEW_INITIALIZE_REQUEST,
+  VIEW_INITIALIZE_SUCCESS,
+  VIEW_INITIALIZE_FAIL
+} from '../../common/constants';
 
 const arg = {
   modelDefinition: {
@@ -34,11 +37,11 @@ describe('show view / scenario', () => {
     }, scenarioSaga, arg);
 
     expect(dispatched.map(({ type }) => type)).to.deep.equal([
-      VIEW_INITIALIZE_REQUEST,
+      VIEW_INITIALIZE_REQUEST(VIEW_NAME),
       INSTANCE_SHOW_REQUEST,
       INSTANCE_SHOW_SUCCESS,
       TAB_SELECT,
-      VIEW_INITIALIZE_SUCCESS
+      VIEW_INITIALIZE_SUCCESS(VIEW_NAME)
     ])
   });
 
@@ -68,10 +71,10 @@ describe('show view / scenario', () => {
     });
 
     expect(dispatched.map(({ type }) => type)).to.deep.equal([
-      VIEW_INITIALIZE_REQUEST,
+      VIEW_INITIALIZE_REQUEST(VIEW_NAME),
       INSTANCE_SHOW_REQUEST,
       INSTANCE_SHOW_FAIL,
-      VIEW_INITIALIZE_FAIL
+      VIEW_INITIALIZE_FAIL(VIEW_NAME)
     ])
   });
 })

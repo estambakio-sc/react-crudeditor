@@ -12,21 +12,13 @@ import {
 
 import {
   ALL_INSTANCE_FIELDS_VALIDATE_REQUEST,
-
   INSTANCE_FIELD_CHANGE,
   INSTANCE_FIELD_VALIDATE,
-
   INSTANCE_SAVE_FAIL,
   INSTANCE_SAVE_REQUEST,
   INSTANCE_SAVE_SUCCESS,
-
-  VIEW_INITIALIZE,
-
-  VIEW_REDIRECT_REQUEST,
-  VIEW_REDIRECT_SUCCESS,
-  VIEW_REDIRECT_FAIL,
-
-  TAB_SELECT
+  TAB_SELECT,
+  VIEW_NAME
 } from './constants';
 
 import {
@@ -35,7 +27,11 @@ import {
   STATUS_UNINITIALIZED,
   EMPTY_FIELD_VALUE,
   STATUS_REDIRECTING,
-  UNPARSABLE_FIELD_VALUE
+  UNPARSABLE_FIELD_VALUE,
+  VIEW_INITIALIZE,
+  VIEW_REDIRECT_REQUEST,
+  VIEW_REDIRECT_SUCCESS,
+  VIEW_REDIRECT_FAIL,
 } from '../../common/constants';
 
 const defaultStoreStateTemplate = {
@@ -90,7 +86,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
   storeState = cloneDeep(defaultStoreStateTemplate),
   { type, payload, error, meta }
 ) => {
-  if (storeState.status === STATUS_UNINITIALIZED && type !== VIEW_INITIALIZE) {
+  if (storeState.status === STATUS_UNINITIALIZED && type !== VIEW_INITIALIZE(VIEW_NAME)) {
     return storeState;
   }
 
@@ -99,7 +95,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
   /* eslint-disable padded-blocks */
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  if (type === VIEW_INITIALIZE) {
+  if (type === VIEW_INITIALIZE(VIEW_NAME)) {
     const { predefinedFields } = payload;
 
     if (!isEqual(predefinedFields, storeState.predefinedFields)) {
@@ -121,7 +117,7 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
 
     newStoreStateSlice.formInstance = u.constant(formInstance);
 
-    const formLayout = modelDefinition.ui.create.formLayout(formInstance).
+    const formLayout = modelDefinition.ui.views[VIEW_NAME].formLayout(formInstance).
       filter(entry => !!entry); // Removing empty tabs/sections and null tabs/sections/fields.
 
     checkFormLayout(formLayout);
@@ -168,16 +164,16 @@ export default /* istanbul ignore next */ (modelDefinition, i18n) => (
 
   // ███████████████████████████████████████████████████████████████████████████████████████████████████████████
 
-  } else if (type === VIEW_REDIRECT_REQUEST) {
+  } else if (type === VIEW_REDIRECT_REQUEST(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_REDIRECTING;
 
   } else if (type === INSTANCE_SAVE_SUCCESS) {
     newStoreStateSlice.status = STATUS_READY;
 
-  } else if (type === VIEW_REDIRECT_FAIL) {
+  } else if (type === VIEW_REDIRECT_FAIL(VIEW_NAME)) {
     newStoreStateSlice.status = STATUS_READY;
 
-  } else if (type === VIEW_REDIRECT_SUCCESS) {
+  } else if (type === VIEW_REDIRECT_SUCCESS(VIEW_NAME)) {
     // Reseting the store to initial uninitialized state.
     newStoreStateSlice = u.constant(cloneDeep(defaultStoreStateTemplate));
 

@@ -8,7 +8,7 @@ describe("Models / Contracts", _ => {
       const filter = {
         contractId: "YYYYYYYYYYY"
       };
-      const result = contracts.ui.create.defaultNewInstance({ filter });
+      const result = contracts.ui.views.create().defaultNewInstance({ filter });
 
       assert.deepEqual(
         result,

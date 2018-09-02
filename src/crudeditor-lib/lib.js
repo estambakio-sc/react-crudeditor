@@ -1,34 +1,13 @@
 import cloneDeep from 'lodash/cloneDeep';
-
 import { checkModelDefinition } from './check-model';
-
-import { getViewState as getSearchViewState, getUi as getSearchUi } from './views/search';
-import { getViewState as getCreateViewState, getUi as getCreateUi } from './views/create';
-import { getViewState as getEditViewState, getUi as getEditUi } from './views/edit';
-import { getViewState as getShowViewState, getUi as getShowUi } from './views/show';
-import { getViewState as getErrorViewState } from './views/error';
-
+import { getUiViews, getViewState } from './views';
 import {
   DEFAULT_FIELD_TYPE,
-  VIEW_SEARCH,
-  VIEW_CREATE,
-  VIEW_EDIT,
-  VIEW_SHOW,
-  VIEW_ERROR,
-
   PERMISSION_CREATE,
   PERMISSION_EDIT,
   PERMISSION_VIEW,
   PERMISSION_DELETE
 } from './common/constants';
-
-const getViewState = {
-  [VIEW_SEARCH]: getSearchViewState,
-  [VIEW_CREATE]: getCreateViewState,
-  [VIEW_EDIT]: getEditViewState,
-  [VIEW_SHOW]: getShowViewState,
-  [VIEW_ERROR]: getErrorViewState
-};
 
 // see npm "bounce" module for details: https://github.com/hapijs/bounce
 export const isSystemError = err => [
@@ -40,12 +19,16 @@ export const isSystemError = err => [
   URIError
 ].some(systemErrorConstructor => err instanceof systemErrorConstructor);
 
-export const storeState2appState = (storeState, modelDefinition) => storeState.common.activeViewName ?
-  {
-    name: storeState.common.activeViewName,
-    state: cloneDeep(getViewState[storeState.common.activeViewName](storeState, modelDefinition))
+export const storeState2appState = (storeState, modelDefinition) => {
+  const { activeViewName } = storeState.common;
+  return activeViewName ? {
+    name: activeViewName,
+    state: getViewState(activeViewName) ?
+      cloneDeep(getViewState(activeViewName)(storeState, modelDefinition)) :
+      {}
   } :
-  undefined;
+    undefined;
+}
 
 export function getPrefixedTranslations(translations, prefix) {
   return Object.keys(translations).
@@ -119,19 +102,7 @@ export function fillDefaults(baseModelDefinition) {
       crudOperations[p] = false
     });
 
-
-  const getUi = {
-    ...(isAllowed(crudOperations, PERMISSION_VIEW) ? { [VIEW_SEARCH]: getSearchUi } : null),
-    ...(isAllowed(crudOperations, PERMISSION_CREATE) ? { [VIEW_CREATE]: getCreateUi } : null),
-    ...(isAllowed(crudOperations, PERMISSION_EDIT) ? { [VIEW_EDIT]: getEditUi } : null),
-    ...(isAllowed(crudOperations, PERMISSION_VIEW) ? { [VIEW_SHOW]: getShowUi } : null)
-  };
-
-  Object.keys(getUi).forEach(viewName => {
-    if (getUi[viewName]) {
-      modelDefinition.ui[viewName] = getUi[viewName](modelDefinition);
-    }
-  });
+  modelDefinition.ui.views = getUiViews(modelDefinition);
 
   return modelDefinition;
 }

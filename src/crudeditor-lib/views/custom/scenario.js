@@ -1,6 +1,4 @@
 import { put, spawn } from 'redux-saga/effects';
-
-import { VIEW_NAME } from './constants';
 import { VIEW_SOFT_REDIRECT, VIEW_INITIALIZE } from '../../common/constants';
 import redirectSaga from '../../common/workerSagas/redirect';
 import scenarioSaga from '../../common/scenario';
@@ -13,15 +11,15 @@ const transitions = {
 };
 
 // See Search View scenario for detailed description of the saga.
-export default function*({
+export default viewName => function*({
   modelDefinition,
   softRedirectSaga,
-  viewState: err,
+  viewState,
   source
 }) {
   yield put({
-    type: VIEW_INITIALIZE(VIEW_NAME),
-    payload: err,
+    type: VIEW_INITIALIZE(viewName),
+    payload: viewState,
     meta: { source }
   });
 
@@ -29,6 +27,6 @@ export default function*({
     modelDefinition,
     softRedirectSaga,
     transitions,
-    viewName: VIEW_NAME
+    viewName
   }));
 }

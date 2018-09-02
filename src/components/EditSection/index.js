@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Collapse from 'react-bootstrap/lib/Collapse';
 import { getModelMessage, titleCase } from '../lib';
-import './styles.less';
 
 export default class EditSelection extends Component {
   static propTypes = {

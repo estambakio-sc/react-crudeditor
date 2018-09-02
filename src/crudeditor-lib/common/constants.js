@@ -76,4 +76,18 @@ export const
     code: ERROR_FORBIDDEN,
     id: 'forbiddenViewError',
     message: `Access to '${viewName}' view is forbidden`
-  });
+  }),
+
+  // common action types, should be used with namespace, e.g. viewName + actionType
+
+  ns = actionType => viewName => `${viewName}/${actionType}`,
+
+  VIEW_INITIALIZE = ns('VIEW_INITIALIZE'),
+
+  VIEW_INITIALIZE_REQUEST = ns('VIEW_INITIALIZE_REQUEST'),
+  VIEW_INITIALIZE_FAIL = ns('VIEW_INITIALIZE_FAIL'),
+  VIEW_INITIALIZE_SUCCESS = ns('VIEW_INITIALIZE_SUCCESS'),
+
+  VIEW_REDIRECT_REQUEST = ns('VIEW_REDIRECT_REQUEST'),
+  VIEW_REDIRECT_FAIL = ns('VIEW_REDIRECT_FAIL'),
+  VIEW_REDIRECT_SUCCESS = ns('VIEW_REDIRECT_SUCCESS');
